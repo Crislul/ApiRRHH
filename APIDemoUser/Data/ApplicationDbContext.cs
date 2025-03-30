@@ -51,7 +51,7 @@ namespace APIDemoUser.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Autorizacion>()
-                .HasOne(a => a.AreaTrabajo)
+                .HasOne(a => a.Area)
                 .WithMany(at => at.Autorizaciones)
                 .HasForeignKey(a => a.AreaId)
                 .OnDelete(DeleteBehavior.Restrict);

@@ -14,7 +14,7 @@ namespace APIDemoUser.Models
 
         [ForeignKey("Area")]
         public int AreaId { get; set; }
-        public Area AreaTrabajo { get; set; }
+        public Area Area { get; set; }
 
         [ForeignKey("Categoria")]
         public int CategoriaId { get; set; }
