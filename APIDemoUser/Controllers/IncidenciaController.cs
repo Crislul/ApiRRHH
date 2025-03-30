@@ -171,11 +171,13 @@ public class IncidenciaController : ControllerBase
         incidencia.AreaId = incidenciaDto.AreaId;
         incidencia.CategoriaId = incidenciaDto.CategoriaId;
         incidencia.MotivoId = incidenciaDto.MotivoId;
+        incidencia.Estatus = incidenciaDto.Estatus;
 
         _context.Entry(incidencia).State = EntityState.Modified;
         await _context.SaveChangesAsync();
         return NoContent();
     }
+
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteIncidencia(int id)
@@ -187,6 +189,7 @@ public class IncidenciaController : ControllerBase
         await _context.SaveChangesAsync();
         return NoContent();
     }
+
 }
 
 

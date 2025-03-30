@@ -30,7 +30,15 @@ namespace APIDemoUser.Controllers
             if (usuario == null)
                 return Ok(new { autenticado = false });
 
-            return Ok(new { autenticado = true, tipoUsuario = usuario.TipoUsuario, nombre = usuario.Nombre, id = usuario.Id });
+            return Ok(new { 
+
+                autenticado = true, 
+                tipoUsuario = usuario.TipoUsuario,
+                apellidoP = usuario.ApellidoP,
+                apellidoM = usuario.ApellidoM,
+                nombre = usuario.Nombre, 
+                id = usuario.Id 
+            });
         }
     }
 }
