@@ -5,7 +5,7 @@
 namespace APIDemoUser.Migrations
 {
     /// <inheritdoc />
-    public partial class updateTables : Migration
+    public partial class updatetables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -79,7 +79,6 @@ namespace APIDemoUser.Migrations
                     HoraSalida = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     HoraEntrada = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     HorarioTrabajo = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Lugar = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Asunto = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Fecha = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Estatus = table.Column<int>(type: "int", nullable: false)
@@ -121,7 +120,9 @@ namespace APIDemoUser.Migrations
                     AreaId = table.Column<int>(type: "int", nullable: false),
                     CategoriaId = table.Column<int>(type: "int", nullable: false),
                     MotivoId = table.Column<int>(type: "int", nullable: false),
-                    Estatus = table.Column<int>(type: "int", nullable: false)
+                    Estatus = table.Column<int>(type: "int", nullable: false),
+                    Archivo = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    NombreArchivo = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {

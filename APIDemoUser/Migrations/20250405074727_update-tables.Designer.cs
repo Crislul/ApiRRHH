@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace APIDemoUser.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250328051210_updateTables")]
-    partial class updateTables
+    [Migration("20250405074727_update-tables")]
+    partial class updatetables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -81,11 +81,6 @@ namespace APIDemoUser.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Lugar")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int");
 
@@ -126,6 +121,9 @@ namespace APIDemoUser.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<byte[]>("Archivo")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<int>("AreaId")
                         .HasColumnType("int");
 
@@ -154,6 +152,9 @@ namespace APIDemoUser.Migrations
 
                     b.Property<int>("MotivoId")
                         .HasColumnType("int");
+
+                    b.Property<string>("NombreArchivo")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int");
@@ -230,7 +231,7 @@ namespace APIDemoUser.Migrations
 
             modelBuilder.Entity("APIDemoUser.Models.Autorizacion", b =>
                 {
-                    b.HasOne("APIDemoUser.Models.Area", "AreaTrabajo")
+                    b.HasOne("APIDemoUser.Models.Area", "Area")
                         .WithMany("Autorizaciones")
                         .HasForeignKey("AreaId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -248,7 +249,7 @@ namespace APIDemoUser.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("AreaTrabajo");
+                    b.Navigation("Area");
 
                     b.Navigation("Categoria");
 

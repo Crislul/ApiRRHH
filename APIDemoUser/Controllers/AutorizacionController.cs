@@ -45,7 +45,6 @@ public class AutorizacionController : ControllerBase
                 HoraSalida = a.HoraSalida,
                 HoraEntrada = a.HoraEntrada,
                 HorarioTrabajo = a.HorarioTrabajo,
-                Lugar = a.Lugar,
                 Asunto = a.Asunto,
                 Fecha = a.Fecha,
                 Estatus = a.Estatus
@@ -81,7 +80,6 @@ public class AutorizacionController : ControllerBase
             HoraSalida = autorizacion.HoraSalida,
             HoraEntrada = autorizacion.HoraEntrada,
             HorarioTrabajo = autorizacion.HorarioTrabajo,
-            Lugar = autorizacion.Lugar,
             Asunto = autorizacion.Asunto,
             Fecha = autorizacion.Fecha,
             Estatus = autorizacion.Estatus
@@ -115,20 +113,18 @@ public class AutorizacionController : ControllerBase
         if (categoria == null) return BadRequest("Categoría no encontrada.");
         
         
-        
-        
         var autorizacion = new Autorizacion
         {
-            UsuarioId = usuario.Id,
-            AreaId = area.Id,
-            CategoriaId = categoria.Id,
+            
             HoraSalida = autorizacionDto.HoraSalida,
             HoraEntrada = autorizacionDto.HoraEntrada,
             HorarioTrabajo = autorizacionDto.HorarioTrabajo,
-            Lugar = autorizacionDto.Lugar,
             Asunto = autorizacionDto.Asunto,
             Fecha = autorizacionDto.Fecha,
-            Estatus = autorizacionDto.Estatus
+            Estatus = autorizacionDto.Estatus,
+            UsuarioId = usuario.Id,
+            AreaId = area.Id,
+            CategoriaId = categoria.Id
         };
 
         _context.Autorizaciones.Add(autorizacion);
@@ -145,7 +141,6 @@ public class AutorizacionController : ControllerBase
             HoraSalida = autorizacion.HoraSalida,
             HoraEntrada = autorizacion.HoraEntrada,
             HorarioTrabajo = autorizacion.HorarioTrabajo,
-            Lugar = autorizacion.Lugar,
             Asunto = autorizacion.Asunto,
             Fecha = autorizacion.Fecha,
             Estatus = autorizacion.Estatus
@@ -164,7 +159,6 @@ public class AutorizacionController : ControllerBase
         autorizacion.HoraSalida = autorizacionDto.HoraSalida;
         autorizacion.HoraEntrada = autorizacionDto.HoraEntrada;
         autorizacion.HorarioTrabajo = autorizacionDto.HorarioTrabajo;
-        autorizacion.Lugar = autorizacionDto.Lugar;
         autorizacion.Asunto = autorizacionDto.Asunto;
         autorizacion.Fecha = autorizacionDto.Fecha;
         autorizacion.Estatus = autorizacionDto.Estatus;

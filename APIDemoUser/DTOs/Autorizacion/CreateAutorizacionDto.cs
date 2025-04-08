@@ -14,7 +14,6 @@
         public string HoraSalida { get; set; }
         public string HoraEntrada { get; set; }
         public string HorarioTrabajo { get; set; }
-        public string Lugar { get; set; }
         public string Asunto { get; set; }
         public string Fecha { get; set; }
         public int Estatus { get; set; }

@@ -28,15 +28,11 @@ namespace APIDemoUser.Models
 
         [Required]
         [StringLength(100)]
-        public string HorarioTrabajo { get; set; } = string.Empty;
-
-        [Required]
-        [StringLength(100)]
-        public string Lugar { get; set; } = string.Empty;
+        public string HorarioTrabajo { get; set; }
 
         [Required]
         [StringLength(255)]
-        public string Asunto { get; set; } = string.Empty;
+        public string Asunto { get; set; }
 
         [Required]
         public string Fecha { get; set; }

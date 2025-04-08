@@ -15,5 +15,7 @@
         public int? MotivoId { get; set; }
         public string MotivoNombre { get; set; }  
         public int Estatus { get; set; }
+
+        public string? NombreArchivo { get; set; }
     }
 }

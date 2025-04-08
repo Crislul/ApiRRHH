@@ -49,7 +49,9 @@ public class IncidenciaController : ControllerBase
                 CategoriaNombre = i.Categoria.Nombre,
                 MotivoId = i.MotivoId,
                 MotivoNombre = i.Motivo.Nombre,
-                Estatus = i.Estatus
+                Estatus = i.Estatus,
+                NombreArchivo = i.NombreArchivo,
+                
             })
             .ToListAsync();
 
@@ -85,7 +87,9 @@ public class IncidenciaController : ControllerBase
             CategoriaNombre = incidencia.Categoria.Nombre,
             MotivoId = incidencia.MotivoId,
             MotivoNombre = incidencia.Motivo.Nombre,
-            Estatus = incidencia.Estatus
+            Estatus = incidencia.Estatus,
+            NombreArchivo = incidencia.NombreArchivo,
+            
         });
     }
 
@@ -187,6 +191,52 @@ public class IncidenciaController : ControllerBase
         return NoContent();
     }
 
+
+    [HttpPost("subir-archivo/{id}")]
+    public async Task<IActionResult> SubirArchivo(int id, IFormFile archivo)
+    {
+        if (archivo == null || archivo.Length == 0)
+            return BadRequest("No se seleccionó ningún archivo.");
+
+        var incidencia = await _context.Incidencias.FindAsync(id);
+        if (incidencia == null)
+            return NotFound("Incidencia no encontrada.");
+
+        using (var ms = new MemoryStream())
+        {
+            await archivo.CopyToAsync(ms);
+            incidencia.Archivo = ms.ToArray();
+            incidencia.NombreArchivo = archivo.FileName;
+        }
+
+        await _context.SaveChangesAsync();
+        return Ok(new { mensaje = "Archivo subido correctamente." });
+    }
+
+    [HttpGet("descargar-archivo/{id}")]
+    public async Task<IActionResult> DescargarArchivo(int id)
+    {
+        var incidencia = await _context.Incidencias.FindAsync(id);
+        if (incidencia == null || incidencia.Archivo == null)
+            return NotFound("Documento no encontrado.");
+
+        var contentType = ObtenerContentType(incidencia.NombreArchivo);
+        return File(incidencia.Archivo, contentType, incidencia.NombreArchivo);
+    }
+
+    private string ObtenerContentType(string fileName)
+    {
+        var extension = Path.GetExtension(fileName).ToLowerInvariant();
+        return extension switch
+        {
+            ".pdf" => "application/pdf",
+            ".jpg" => "image/jpeg",
+            ".jpeg" => "image/jpeg",
+            ".png" => "image/png",
+            ".gif" => "image/gif",
+            _ => "application/octet-stream"
+        };
+    }
 }
 
 

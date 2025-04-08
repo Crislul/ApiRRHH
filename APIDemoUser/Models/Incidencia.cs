@@ -39,5 +39,11 @@ namespace APIDemoUser.Models
 
         [Required]
         public int Estatus { get; set; }
+
+        
+        public byte[]? Archivo { get; set; }
+
+        public string? NombreArchivo { get; set; }
+
     }
 }

@@ -15,11 +15,11 @@ namespace APIDemoUser.Data
         public DbSet<Incidencia> Incidencias { get; set; }
         public DbSet<Autorizacion> Autorizaciones { get; set; }
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configuración de relaciones
             modelBuilder.Entity<Incidencia>()
                 .HasOne(i => i.Usuario)
                 .WithMany(t => t.Incidencias)
@@ -61,6 +61,7 @@ namespace APIDemoUser.Data
                 .WithMany(c => c.Autorizaciones)
                 .HasForeignKey(a => a.CategoriaId)
                 .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }
