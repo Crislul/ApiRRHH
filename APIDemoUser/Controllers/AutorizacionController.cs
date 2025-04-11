@@ -128,7 +128,20 @@ public class AutorizacionController : ControllerBase
         };
 
         _context.Autorizaciones.Add(autorizacion);
+        // Crear la notificación
         await _context.SaveChangesAsync();
+
+        // Crear la notificación
+        _context.Notificaciones.Add(new Notificacion
+        {
+            Mensaje = $"El usuario {usuario.Nombre} genero una nueva autorizacion.",
+            Tipo = "salida",
+            PermisoId = autorizacion.Id
+
+        });
+        await _context.SaveChangesAsync();
+
+
         return CreatedAtAction(nameof(GetAutorizacion), new { id = autorizacion.Id }, new AutorizacionDto
         {
             Id = autorizacion.Id,

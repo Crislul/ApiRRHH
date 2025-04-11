@@ -14,7 +14,7 @@ namespace APIDemoUser.Data
         public DbSet<Motivo> Motivos { get; set; }
         public DbSet<Incidencia> Incidencias { get; set; }
         public DbSet<Autorizacion> Autorizaciones { get; set; }
-
+        public DbSet<Notificacion> Notificaciones { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

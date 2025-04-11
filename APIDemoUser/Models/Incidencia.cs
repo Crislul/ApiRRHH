@@ -45,5 +45,7 @@ namespace APIDemoUser.Models
 
         public string? NombreArchivo { get; set; }
 
+       
     }
+
 }

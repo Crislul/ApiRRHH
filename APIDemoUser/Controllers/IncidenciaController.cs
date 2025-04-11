@@ -3,6 +3,7 @@ using APIDemoUser.DTOs.Incidencia;
 using APIDemoUser.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 [Route("api/incidencia")]
 [ApiController]
@@ -133,8 +134,22 @@ public class IncidenciaController : ControllerBase
             
         };
 
+       
         _context.Incidencias.Add(incidencia);
         await _context.SaveChangesAsync();
+
+        // Crear la notificación
+        _context.Notificaciones.Add(new Notificacion
+        {
+            Mensaje = $"El usuario {usuario.Nombre} genero una nueva incidencia",
+            Tipo = "incidencia",
+            PermisoId = incidencia.Id
+
+        });
+        await _context.SaveChangesAsync();
+
+
+
 
         // Devolver la incidencia con los nombres en la respuesta
         return CreatedAtAction(nameof(GetIncidencia), new { id = incidencia.Id }, new IncidenciaDto
