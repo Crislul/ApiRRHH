@@ -131,14 +131,19 @@ public class AutorizacionController : ControllerBase
         // Crear la notificación
         await _context.SaveChangesAsync();
 
-        // Crear la notificación
-        _context.Notificaciones.Add(new Notificacion
+        // Crear la notificación para el admin
+        var notificacion = new Notificacion
         {
-            Mensaje = $"El usuario {usuario.Nombre} genero una nueva autorizacion.",
+            Mensaje = $"El usuario {usuario.Nombre} generó una solicitud de salida",
             Tipo = "salida",
-            PermisoId = autorizacion.Id
+            Estado = "pendiente",
+            Fecha = DateTime.Now,
+            PermisoId = autorizacion.Id,
+            UsuarioId = usuario.Id,
+            TipoPermiso = "salida"
+        };
 
-        });
+        _context.Notificaciones.Add(notificacion);
         await _context.SaveChangesAsync();
 
 
@@ -178,6 +183,27 @@ public class AutorizacionController : ControllerBase
 
         _context.Entry(autorizacion).State = EntityState.Modified;
         await _context.SaveChangesAsync();
+        // Crear notificación para el usuario
+        if (autorizacionDto.Estatus == 1 || autorizacionDto.Estatus == 2)
+        {
+            var mensaje = autorizacionDto.Estatus == 1
+                ? $"Tu solicitud de autorización de salida {autorizacion.Id}, ha sido : Aceptada"
+                : $"Tu solicitud de autorización de salida {autorizacion.Id}, ha sido : Rechazada";
+
+            var notificacion = new Notificacion
+            {
+                Mensaje = mensaje,
+                Tipo = "respuesta",
+                Estado = "pendiente",
+                Fecha = DateTime.Now,
+                PermisoId = autorizacion.Id,
+                UsuarioId = autorizacion.UsuarioId,
+                TipoPermiso = "salida"
+            };
+
+            _context.Notificaciones.Add(notificacion);
+            await _context.SaveChangesAsync();
+        }
         return NoContent();
     }
 

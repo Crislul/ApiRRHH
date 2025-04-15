@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace APIDemoUser.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class InitialFinal : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -60,7 +60,9 @@ namespace APIDemoUser.Migrations
                     Tipo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Estado = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PermisoId = table.Column<int>(type: "int", nullable: true)
+                    PermisoId = table.Column<int>(type: "int", nullable: true),
+                    UsuarioId = table.Column<int>(type: "int", nullable: true),
+                    TipoPermiso = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {

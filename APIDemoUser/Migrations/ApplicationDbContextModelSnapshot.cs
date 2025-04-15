@@ -212,6 +212,12 @@ namespace APIDemoUser.Migrations
                     b.Property<string>("Tipo")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("TipoPermiso")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UsuarioId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Notificaciones");

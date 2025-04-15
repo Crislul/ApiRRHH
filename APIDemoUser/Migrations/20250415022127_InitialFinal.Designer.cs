@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace APIDemoUser.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250411191112_Initial")]
-    partial class Initial
+    [Migration("20250415022127_InitialFinal")]
+    partial class InitialFinal
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -214,6 +214,12 @@ namespace APIDemoUser.Migrations
 
                     b.Property<string>("Tipo")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TipoPermiso")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("UsuarioId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

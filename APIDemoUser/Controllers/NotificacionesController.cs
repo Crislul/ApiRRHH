@@ -18,17 +18,20 @@ namespace APIDemoUser.Controllers
         {
             _context = context;
         }
-
-
+        //todas las notis de solicitudes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Notificacion>>> GetNotificacionesPendientes()
+        public async Task<ActionResult<IEnumerable<Notificacion>>> GetNotificaciones()
         {
             return await _context.Notificaciones
-                .Where(n => n.Estado == "pendiente")
-                .OrderByDescending(n => n.Fecha)
-                .ToListAsync();
+            .Where(n => n.Tipo != "respuesta")
+            .OrderByDescending(n => n.Fecha)
+            .ToListAsync();
         }
-       
+
+
+
+
+
 
         [HttpPut("notificaciones/{id}/leida")]
         public async Task<IActionResult> MarcarComoLeida(int id)
@@ -54,6 +57,18 @@ namespace APIDemoUser.Controllers
             await _context.SaveChangesAsync();
             return NoContent();
         }
+        //usuario notis respuesta
+        [HttpGet("usuario/{usuarioId}")]
+        public async Task<ActionResult<IEnumerable<Notificacion>>> GetNotificacionesPorUsuario(int usuarioId)
+        {
+            var notis = await _context.Notificaciones
+                .Where(n => n.UsuarioId == usuarioId && n.Estado == "pendiente" && n.Tipo == "respuesta")
+                .OrderByDescending(n => n.Fecha)
+                .ToListAsync();
+
+            return Ok(notis);
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> CrearNotificacion(NotificacionDto dto)

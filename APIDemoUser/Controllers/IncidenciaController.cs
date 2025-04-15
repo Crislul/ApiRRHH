@@ -3,6 +3,7 @@ using APIDemoUser.DTOs.Incidencia;
 using APIDemoUser.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Mono.TextTemplating;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 [Route("api/incidencia")]
@@ -139,13 +140,25 @@ public class IncidenciaController : ControllerBase
         await _context.SaveChangesAsync();
 
         // Crear la notificación
-        _context.Notificaciones.Add(new Notificacion
+        if (usuario == null)
         {
-            Mensaje = $"El usuario {usuario.Nombre} genero una nueva incidencia",
-            Tipo = "incidencia",
-            PermisoId = incidencia.Id
+            Console.WriteLine("Usuario no encontrado para la incidencia.");
+            return BadRequest("Usuario no válido.");
+        }
 
-        });
+        // Crear la notificación para el admin
+        var notificacion = new Notificacion
+        {
+            Mensaje = $"El usuario {usuario.Nombre} generó una nueva incidencia",
+            Tipo = "incidencia",
+            Estado = "pendiente",
+            Fecha = DateTime.Now,
+            PermisoId = incidencia.Id,
+            UsuarioId = usuario.Id,
+            TipoPermiso = "incidencia"
+        };
+
+        _context.Notificaciones.Add(notificacion);
         await _context.SaveChangesAsync();
 
 
@@ -191,6 +204,29 @@ public class IncidenciaController : ControllerBase
 
         _context.Entry(incidencia).State = EntityState.Modified;
         await _context.SaveChangesAsync();
+
+        // Crear notificación para el usuario
+        if (incidenciaDto.Estatus == 1 || incidenciaDto.Estatus == 2)
+        {
+            var mensaje = incidenciaDto.Estatus == 1
+                ? $"Tu solicitud de incidencia {incidencia.Id}, ha sido : Aceptada"
+                : $"Tu solicitud de incidencia {incidencia.Id}, ha sido : Rechazada";
+
+            var notificacion = new Notificacion
+            {
+                Mensaje = mensaje,
+                Tipo = "respuesta",
+                Estado = "pendiente",
+                Fecha = DateTime.Now,
+                PermisoId = incidencia.Id,
+                UsuarioId = incidenciaDto.UsuarioId,
+                TipoPermiso = "incidencia" 
+            };
+
+            _context.Notificaciones.Add(notificacion);
+            await _context.SaveChangesAsync();
+        }
+
         return NoContent();
     }
 
