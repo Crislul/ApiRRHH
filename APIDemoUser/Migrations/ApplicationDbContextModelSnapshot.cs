@@ -111,6 +111,35 @@ namespace APIDemoUser.Migrations
                     b.ToTable("Categorias");
                 });
 
+            modelBuilder.Entity("APIDemoUser.Models.Expediente", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Archivo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Documento")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("FechaSubida")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("Expedientes");
+                });
+
             modelBuilder.Entity("APIDemoUser.Models.Incidencia", b =>
                 {
                     b.Property<int>("Id")
@@ -285,6 +314,17 @@ namespace APIDemoUser.Migrations
                     b.Navigation("Area");
 
                     b.Navigation("Categoria");
+
+                    b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("APIDemoUser.Models.Expediente", b =>
+                {
+                    b.HasOne("APIDemoUser.Models.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Usuario");
                 });

@@ -50,6 +50,17 @@ namespace APIDemoUser.Controllers
             });
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Usuario>> ObtenerUsuarioPorId(int id)
+        {
+            var usuario = await _context.Usuarios.FindAsync(id);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+            return usuario;
+        }
+
         // Obtener todos los usuarios
         [HttpGet]
         public async Task<IActionResult> ObtenerUsuarios()
