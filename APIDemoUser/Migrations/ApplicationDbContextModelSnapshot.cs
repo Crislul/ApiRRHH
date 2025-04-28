@@ -135,8 +135,6 @@ namespace APIDemoUser.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UsuarioId");
-
                     b.ToTable("Expedientes");
                 });
 
@@ -314,17 +312,6 @@ namespace APIDemoUser.Migrations
                     b.Navigation("Area");
 
                     b.Navigation("Categoria");
-
-                    b.Navigation("Usuario");
-                });
-
-            modelBuilder.Entity("APIDemoUser.Models.Expediente", b =>
-                {
-                    b.HasOne("APIDemoUser.Models.Usuario", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("Usuario");
                 });

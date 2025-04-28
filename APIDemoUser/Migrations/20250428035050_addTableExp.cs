@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace APIDemoUser.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialFinal : Migration
+    public partial class addTableExp : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -35,6 +35,22 @@ namespace APIDemoUser.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Categorias", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Expedientes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UsuarioId = table.Column<int>(type: "int", nullable: false),
+                    Documento = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Archivo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FechaSubida = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Expedientes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -214,6 +230,9 @@ namespace APIDemoUser.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Autorizaciones");
+
+            migrationBuilder.DropTable(
+                name: "Expedientes");
 
             migrationBuilder.DropTable(
                 name: "Incidencias");
