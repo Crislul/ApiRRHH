@@ -62,6 +62,7 @@ namespace APIDemoUser.Data
                 .HasForeignKey(a => a.CategoriaId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+
         }
     }
 }

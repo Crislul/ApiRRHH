@@ -8,5 +8,7 @@
         public string Correo { get; set; }
         public string ContrasenaHash { get; set; }
         public int TipoUsuario { get; set; }
+        public int? AreaId { get; set; }
+        public string? AreaNombre { get; set; }
     }
 }

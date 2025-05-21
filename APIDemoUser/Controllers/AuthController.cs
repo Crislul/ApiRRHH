@@ -34,6 +34,7 @@ namespace APIDemoUser.Controllers
 
                 autenticado = true, 
                 tipoUsuario = usuario.TipoUsuario,
+                areaUsuario = usuario.AreaId,
                 apellidoP = usuario.ApellidoP,
                 apellidoM = usuario.ApellidoM,
                 nombre = usuario.Nombre, 

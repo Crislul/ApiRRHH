@@ -38,6 +38,9 @@ namespace APIDemoUser.Models
         public string Fecha { get; set; }
 
         [Required]
-        public int Estatus { get; set; }
+        public int EstatusAdmin { get; set; }
+
+        [Required]
+        public int EstatusDir { get; set; }
     }
 }

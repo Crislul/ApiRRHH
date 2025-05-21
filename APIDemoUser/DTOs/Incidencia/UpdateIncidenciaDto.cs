@@ -10,6 +10,7 @@
         public int AreaId { get; set; }
         public int CategoriaId { get; set; }
         public int MotivoId { get; set; }
-        public int Estatus { get; set; }
+        public int EstatusAdmin { get; set; }
+        public int EstatusDir { get; set; }
     }
 }

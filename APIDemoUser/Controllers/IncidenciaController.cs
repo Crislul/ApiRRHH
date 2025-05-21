@@ -51,7 +51,8 @@ public class IncidenciaController : ControllerBase
                 CategoriaNombre = i.Categoria.Nombre,
                 MotivoId = i.MotivoId,
                 MotivoNombre = i.Motivo.Nombre,
-                Estatus = i.Estatus,
+                EstatusDir = i.EstatusDir,
+                EstatusAdmin = i.EstatusAdmin,
                 NombreArchivo = i.NombreArchivo,
                 
             })
@@ -89,7 +90,8 @@ public class IncidenciaController : ControllerBase
             CategoriaNombre = incidencia.Categoria.Nombre,
             MotivoId = incidencia.MotivoId,
             MotivoNombre = incidencia.Motivo.Nombre,
-            Estatus = incidencia.Estatus,
+            EstatusDir = incidencia.EstatusDir,
+            EstatusAdmin = incidencia.EstatusAdmin,
             NombreArchivo = incidencia.NombreArchivo,
             
         });
@@ -180,7 +182,8 @@ public class IncidenciaController : ControllerBase
             CategoriaNombre = categoria.Nombre,
             MotivoId = incidencia.MotivoId,
             MotivoNombre = motivo.Nombre,
-            Estatus = incidencia.Estatus
+            EstatusDir = incidencia.EstatusDir,
+            EstatusAdmin = incidencia.EstatusAdmin
         });
     }
 
@@ -200,15 +203,16 @@ public class IncidenciaController : ControllerBase
         incidencia.AreaId = incidenciaDto.AreaId;
         incidencia.CategoriaId = incidenciaDto.CategoriaId;
         incidencia.MotivoId = incidenciaDto.MotivoId;
-        incidencia.Estatus = incidenciaDto.Estatus;
+        incidencia.EstatusDir = incidenciaDto.EstatusDir;
+        incidencia.EstatusAdmin = incidenciaDto.EstatusAdmin;
 
         _context.Entry(incidencia).State = EntityState.Modified;
         await _context.SaveChangesAsync();
 
         // Crear notificación para el usuario
-        if (incidenciaDto.Estatus == 1 || incidenciaDto.Estatus == 2)
+        if (incidenciaDto.EstatusAdmin == 1 || incidenciaDto.EstatusAdmin == 2)
         {
-            var mensaje = incidenciaDto.Estatus == 1
+            var mensaje = incidenciaDto.EstatusAdmin == 1
                 ? $"Tu solicitud de incidencia {incidencia.Id}, ha sido : Aceptada"
                 : $"Tu solicitud de incidencia {incidencia.Id}, ha sido : Rechazada";
 

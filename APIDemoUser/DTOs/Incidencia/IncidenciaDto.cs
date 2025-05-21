@@ -18,8 +18,8 @@ namespace APIDemoUser.DTOs.Incidencia
         public string CategoriaNombre { get; set; }  
         public int MotivoId { get; set; }
         public string MotivoNombre { get; set; }
-        public int Estatus { get; set; }
-
+        public int EstatusAdmin { get; set; }
+        public int EstatusDir { get; set; }
         public string? NombreArchivo { get; set; }
 
     }

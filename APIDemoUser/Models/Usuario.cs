@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Net;
 
 namespace APIDemoUser.Models
@@ -32,8 +33,15 @@ namespace APIDemoUser.Models
         public int TipoUsuario { get; set; } // 2 = Admin, 1 = Usuario
 
 
+        [ForeignKey("Area")]
+
+        public int? AreaId { get; set; }
+        public Area Area { get; set; } //null = general, areas: mecanica, tics, etc.. 
+
+
         public ICollection<Incidencia> Incidencias { get; set; } = new List<Incidencia>();
         public ICollection<Autorizacion> Autorizaciones { get; set; } = new List<Autorizacion>();
+        public ICollection<Area> Areas { get; set; } = new List<Area>();
     }
 }
 

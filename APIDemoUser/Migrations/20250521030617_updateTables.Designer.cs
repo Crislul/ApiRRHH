@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace APIDemoUser.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250428035050_addTableExp")]
-    partial class addTableExp
+    [Migration("20250521030617_updateTables")]
+    partial class updateTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,7 +38,12 @@ namespace APIDemoUser.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int?>("UsuarioId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Areas");
                 });
@@ -62,7 +67,10 @@ namespace APIDemoUser.Migrations
                     b.Property<int>("CategoriaId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Estatus")
+                    b.Property<int>("EstatusAdmin")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EstatusDir")
                         .HasColumnType("int");
 
                     b.Property<string>("Fecha")
@@ -163,7 +171,10 @@ namespace APIDemoUser.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<int>("Estatus")
+                    b.Property<int>("EstatusAdmin")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EstatusDir")
                         .HasColumnType("int");
 
                     b.Property<string>("Fecha")
@@ -271,6 +282,9 @@ namespace APIDemoUser.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int?>("AreaId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ContrasenaHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -289,7 +303,16 @@ namespace APIDemoUser.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AreaId");
+
                     b.ToTable("Usuarios");
+                });
+
+            modelBuilder.Entity("APIDemoUser.Models.Area", b =>
+                {
+                    b.HasOne("APIDemoUser.Models.Usuario", null)
+                        .WithMany("Areas")
+                        .HasForeignKey("UsuarioId");
                 });
 
             modelBuilder.Entity("APIDemoUser.Models.Autorizacion", b =>
@@ -354,6 +377,15 @@ namespace APIDemoUser.Migrations
                     b.Navigation("Usuario");
                 });
 
+            modelBuilder.Entity("APIDemoUser.Models.Usuario", b =>
+                {
+                    b.HasOne("APIDemoUser.Models.Area", "Area")
+                        .WithMany()
+                        .HasForeignKey("AreaId");
+
+                    b.Navigation("Area");
+                });
+
             modelBuilder.Entity("APIDemoUser.Models.Area", b =>
                 {
                     b.Navigation("Autorizaciones");
@@ -375,6 +407,8 @@ namespace APIDemoUser.Migrations
 
             modelBuilder.Entity("APIDemoUser.Models.Usuario", b =>
                 {
+                    b.Navigation("Areas");
+
                     b.Navigation("Autorizaciones");
 
                     b.Navigation("Incidencias");

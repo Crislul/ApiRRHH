@@ -47,7 +47,8 @@ public class AutorizacionController : ControllerBase
                 HorarioTrabajo = a.HorarioTrabajo,
                 Asunto = a.Asunto,
                 Fecha = a.Fecha,
-                Estatus = a.Estatus
+                EstatusDir = a.EstatusDir,
+                EstatusAdmin = a.EstatusAdmin
             })
             .ToListAsync();
 
@@ -82,7 +83,9 @@ public class AutorizacionController : ControllerBase
             HorarioTrabajo = autorizacion.HorarioTrabajo,
             Asunto = autorizacion.Asunto,
             Fecha = autorizacion.Fecha,
-            Estatus = autorizacion.Estatus
+            EstatusDir = autorizacion.EstatusDir,
+            EstatusAdmin = autorizacion.EstatusAdmin
+
         });
     }
 
@@ -121,7 +124,8 @@ public class AutorizacionController : ControllerBase
             HorarioTrabajo = autorizacionDto.HorarioTrabajo,
             Asunto = autorizacionDto.Asunto,
             Fecha = autorizacionDto.Fecha,
-            Estatus = autorizacionDto.Estatus,
+            EstatusDir = autorizacionDto.EstatusDir,
+            EstatusAdmin = autorizacionDto.EstatusAdmin,
             UsuarioId = usuario.Id,
             AreaId = area.Id,
             CategoriaId = categoria.Id
@@ -161,7 +165,8 @@ public class AutorizacionController : ControllerBase
             HorarioTrabajo = autorizacion.HorarioTrabajo,
             Asunto = autorizacion.Asunto,
             Fecha = autorizacion.Fecha,
-            Estatus = autorizacion.Estatus
+            EstatusDir = autorizacion.EstatusDir,
+            EstatusAdmin = autorizacion.EstatusAdmin
         });
     }
 
@@ -179,14 +184,15 @@ public class AutorizacionController : ControllerBase
         autorizacion.HorarioTrabajo = autorizacionDto.HorarioTrabajo;
         autorizacion.Asunto = autorizacionDto.Asunto;
         autorizacion.Fecha = autorizacionDto.Fecha;
-        autorizacion.Estatus = autorizacionDto.Estatus;
+        autorizacion.EstatusDir = autorizacionDto.EstatusDir;
+        autorizacion.EstatusAdmin = autorizacionDto.EstatusAdmin;
 
         _context.Entry(autorizacion).State = EntityState.Modified;
         await _context.SaveChangesAsync();
         // Crear notificación para el usuario
-        if (autorizacionDto.Estatus == 1 || autorizacionDto.Estatus == 2)
+        if (autorizacionDto.EstatusAdmin == 1 || autorizacionDto.EstatusAdmin == 2)
         {
-            var mensaje = autorizacionDto.Estatus == 1
+            var mensaje = autorizacionDto.EstatusAdmin == 1
                 ? $"Tu solicitud de autorización de salida {autorizacion.Id}, ha sido : Aceptada"
                 : $"Tu solicitud de autorización de salida {autorizacion.Id}, ha sido : Rechazada";
 

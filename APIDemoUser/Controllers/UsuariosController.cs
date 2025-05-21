@@ -1,4 +1,5 @@
 ﻿using APIDemoUser.Data;
+using APIDemoUser.DTOs.Incidencia;
 using APIDemoUser.DTOs.User;
 using APIDemoUser.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -27,11 +28,22 @@ namespace APIDemoUser.Controllers
             if (usuarioDto == null)
                 return BadRequest("Datos inválidos.");
 
+            Area? area = null;
+
+            if (usuarioDto.AreaId.HasValue)
+            {
+                area = await _context.Areas.FindAsync(usuarioDto.AreaId.Value);
+                if (area == null)
+                    return BadRequest("Área no encontrada.");
+            }
+
             var correoNormalizado = usuarioDto.Correo.Trim().ToLower();
 
             // Verificar si ya existe un usuario con el mismo correo
             var correoExistente = await _context.Usuarios
                 .AnyAsync(u => u.Correo.Trim().ToLower() == correoNormalizado);
+
+            
 
             if (correoExistente)
                 return Conflict("Ya existe un usuario con ese correo.");
@@ -43,7 +55,8 @@ namespace APIDemoUser.Controllers
                 ApellidoM = usuarioDto.ApellidoM,
                 Correo = usuarioDto.Correo.Trim(), // Guardamos el correo ya sin espacios
                 ContrasenaHash = usuarioDto.ContrasenaHash,
-                TipoUsuario = usuarioDto.TipoUsuario
+                TipoUsuario = usuarioDto.TipoUsuario,
+                AreaId = area?.Id
             };
 
             _context.Usuarios.Add(usuario);
@@ -56,7 +69,8 @@ namespace APIDemoUser.Controllers
                 ApellidoP = usuario.ApellidoP,
                 ApellidoM = usuario.ApellidoM,
                 Correo = usuario.Correo,
-                TipoUsuario = usuario.TipoUsuario
+                TipoUsuario = usuario.TipoUsuario,
+                AreaId = usuario.AreaId
             });
         }
 
@@ -75,7 +89,10 @@ namespace APIDemoUser.Controllers
         [HttpGet]
         public async Task<IActionResult> ObtenerUsuarios()
         {
-            var usuarios = await _context.Usuarios.ToListAsync();
+            var usuarios = await _context.Usuarios
+                .Include(u => u.Area) // Trae la información del área
+                .ToListAsync();
+
             return Ok(usuarios.Select(u => new UsuarioDto
             {
                 Id = u.Id,
@@ -84,9 +101,12 @@ namespace APIDemoUser.Controllers
                 ApellidoM = u.ApellidoM,
                 Correo = u.Correo,
                 ContrasenaHash = u.ContrasenaHash,
-                TipoUsuario = u.TipoUsuario
+                TipoUsuario = u.TipoUsuario,
+                AreaId = u.AreaId,
+                AreaNombre = u.Area != null ? u.Area.Nombre : null // Aquí agregas el nombre del área
             }));
         }
+
 
         // Actualizar un usuario
         [HttpPut("{id}")]
@@ -114,6 +134,7 @@ namespace APIDemoUser.Controllers
             usuarioExistente.Correo = usuarioActualizadoDto.Correo.Trim(); // Guardamos el correo ya sin espacios
             usuarioExistente.ContrasenaHash = usuarioActualizadoDto.ContrasenaHash;
             usuarioExistente.TipoUsuario = usuarioActualizadoDto.TipoUsuario;
+            usuarioExistente.AreaId = usuarioActualizadoDto.AreaId;
 
             await _context.SaveChangesAsync();
             return NoContent();

@@ -14,6 +14,7 @@ namespace APIDemoUser.Models
 
         public ICollection<Incidencia> Incidencias { get; set; } = new List<Incidencia>();
         public ICollection<Autorizacion> Autorizaciones { get; set; } = new List<Autorizacion>();
+        
 
     }
 }
