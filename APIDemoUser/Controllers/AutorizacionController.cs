@@ -132,23 +132,35 @@ public class AutorizacionController : ControllerBase
         };
 
         _context.Autorizaciones.Add(autorizacion);
-        // Crear la notificación
-        await _context.SaveChangesAsync();
+         await _context.SaveChangesAsync();
 
-        // Crear la notificación para el admin
-        var notificacion = new Notificacion
+        // Crear notificación para RRHH 
+        var notiRRHH = new Notificacion
         {
-            Mensaje = $"El usuario {usuario.Nombre} generó una solicitud de salida",
+            Mensaje = $"El usuario {usuario.Nombre} generó una nueva autorización de salida",
             Tipo = "salida",
             Estado = "pendiente",
             Fecha = DateTime.Now,
             PermisoId = autorizacion.Id,
-            UsuarioId = usuario.Id,
-            TipoPermiso = "salida"
+            TipoPermiso = "salida",
+            Rol = 2
         };
 
-        _context.Notificaciones.Add(notificacion);
+        // Crear notificación para el Director 
+        var notiDir = new Notificacion
+        {
+            Mensaje = $"El usuario {usuario.Nombre} generó una nueva autorización de salida",
+            Tipo = "salida",
+            Estado = "pendiente",
+            Fecha = DateTime.Now,
+            PermisoId = autorizacion.Id,
+            TipoPermiso = "salida",
+            Rol = 3
+        };
+
+        _context.Notificaciones.AddRange(notiRRHH, notiDir);
         await _context.SaveChangesAsync();
+
 
 
         return CreatedAtAction(nameof(GetAutorizacion), new { id = autorizacion.Id }, new AutorizacionDto
@@ -190,26 +202,70 @@ public class AutorizacionController : ControllerBase
         _context.Entry(autorizacion).State = EntityState.Modified;
         await _context.SaveChangesAsync();
         // Crear notificación para el usuario
+        // Verifica si RRHH acaba de responder
         if (autorizacionDto.EstatusAdmin == 1 || autorizacionDto.EstatusAdmin == 2)
         {
-            var mensaje = autorizacionDto.EstatusAdmin == 1
-                ? $"Tu solicitud de autorización de salida {autorizacion.Id}, ha sido : Aceptada"
-                : $"Tu solicitud de autorización de salida {autorizacion.Id}, ha sido : Rechazada";
+            var yaExisteRRHH = await _context.Notificaciones.AnyAsync(n =>
+                n.PermisoId == autorizacion.Id &&
+                n.Tipo == "respuesta" &&
+                n.TipoPermiso == "salida" &&
+                n.Mensaje.Contains("El departamento de Recursos Humanos"));
 
-            var notificacion = new Notificacion
+            if (!yaExisteRRHH)
             {
-                Mensaje = mensaje,
-                Tipo = "respuesta",
-                Estado = "pendiente",
-                Fecha = DateTime.Now,
-                PermisoId = autorizacion.Id,
-                UsuarioId = autorizacion.UsuarioId,
-                TipoPermiso = "salida"
-            };
+                var mensaje = autorizacionDto.EstatusAdmin == 1
+                    ? $"El departamento de Recursos Humanos aceptó tu permiso de salida : {autorizacion.Id}."
+                    : $"El departamento de Recursos Humanos rechazó tu permiso de salida : {autorizacion.Id}.";
 
-            _context.Notificaciones.Add(notificacion);
-            await _context.SaveChangesAsync();
+                var notificacionRRHH = new Notificacion
+                {
+                    Mensaje = mensaje,
+                    Tipo = "respuesta",
+                    Estado = "pendiente",
+                    Fecha = DateTime.Now,
+                    PermisoId = autorizacion.Id,
+                    UsuarioId = autorizacionDto.UsuarioId,
+                    TipoPermiso = "salida"
+                };
+
+                _context.Notificaciones.Add(notificacionRRHH);
+                await _context.SaveChangesAsync();
+            }
         }
+
+
+        // Verifica si Dirección acaba de responder
+        if (autorizacionDto.EstatusDir == 1 || autorizacionDto.EstatusDir == 2)
+        {
+            var yaExisteDir = await _context.Notificaciones.AnyAsync(n =>
+                n.PermisoId == autorizacion.Id &&
+                n.Tipo == "respuesta" &&
+                n.TipoPermiso == "salida" &&
+                n.Mensaje.Contains("Dirección"));
+
+            if (!yaExisteDir)
+            {
+                var mensaje = autorizacionDto.EstatusDir == 1
+                    ? $"La Dirección de carrera aceptó tu permiso de salida : {autorizacion.Id}."
+                    : $"La Dirección de carrera rechazó tu permiso de salida : {autorizacion.Id}.";
+
+                var notificacionDir = new Notificacion
+                {
+                    Mensaje = mensaje,
+                    Tipo = "respuesta",
+                    Estado = "pendiente",
+                    Fecha = DateTime.Now,
+                    PermisoId = autorizacion.Id,
+                    UsuarioId = autorizacionDto.UsuarioId,
+                    TipoPermiso = "salida"
+                };
+
+                _context.Notificaciones.Add(notificacionDir);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+
         return NoContent();
     }
 

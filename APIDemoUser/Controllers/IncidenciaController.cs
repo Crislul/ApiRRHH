@@ -141,27 +141,33 @@ public class IncidenciaController : ControllerBase
         _context.Incidencias.Add(incidencia);
         await _context.SaveChangesAsync();
 
-        // Crear la notificación
-        if (usuario == null)
-        {
-            Console.WriteLine("Usuario no encontrado para la incidencia.");
-            return BadRequest("Usuario no válido.");
-        }
-
-        // Crear la notificación para el admin
-        var notificacion = new Notificacion
+        // Crear notificación para RRHH 
+        var notiRRHH = new Notificacion
         {
             Mensaje = $"El usuario {usuario.Nombre} generó una nueva incidencia",
             Tipo = "incidencia",
             Estado = "pendiente",
             Fecha = DateTime.Now,
             PermisoId = incidencia.Id,
-            UsuarioId = usuario.Id,
-            TipoPermiso = "incidencia"
+            TipoPermiso = "incidencia",
+            Rol = 2
         };
 
-        _context.Notificaciones.Add(notificacion);
+        // Crear notificación para el Director 
+        var notiDir = new Notificacion
+        {
+            Mensaje = $"El usuario {usuario.Nombre} generó una nueva incidencia",
+            Tipo = "incidencia",
+            Estado = "pendiente",
+            Fecha = DateTime.Now,
+            PermisoId = incidencia.Id,
+            TipoPermiso = "incidencia",
+            Rol = 3
+        };
+
+        _context.Notificaciones.AddRange(notiRRHH, notiDir);
         await _context.SaveChangesAsync();
+
 
 
 
@@ -210,26 +216,71 @@ public class IncidenciaController : ControllerBase
         await _context.SaveChangesAsync();
 
         // Crear notificación para el usuario
+        // Verifica si RRHH acaba de responder
         if (incidenciaDto.EstatusAdmin == 1 || incidenciaDto.EstatusAdmin == 2)
         {
-            var mensaje = incidenciaDto.EstatusAdmin == 1
-                ? $"Tu solicitud de incidencia {incidencia.Id}, ha sido : Aceptada"
-                : $"Tu solicitud de incidencia {incidencia.Id}, ha sido : Rechazada";
+            var yaExisteRRHH = await _context.Notificaciones.AnyAsync(n =>
+                n.PermisoId == incidencia.Id &&
+                n.Tipo == "respuesta" &&
+                n.TipoPermiso == "incidencia" &&
+                n.Mensaje.Contains("El departamento de Recursos Humanos"));
 
-            var notificacion = new Notificacion
+            if (!yaExisteRRHH)
             {
-                Mensaje = mensaje,
-                Tipo = "respuesta",
-                Estado = "pendiente",
-                Fecha = DateTime.Now,
-                PermisoId = incidencia.Id,
-                UsuarioId = incidenciaDto.UsuarioId,
-                TipoPermiso = "incidencia" 
-            };
+                var mensaje = incidenciaDto.EstatusAdmin == 1
+                    ? $"El departamento de Recursos Humanos aceptó tu solicitud de incidencia : {incidencia.Id}."
+                    : $"El departamento de Recursos Humanos rechazó tu solicitud de incidencia : {incidencia.Id}.";
 
-            _context.Notificaciones.Add(notificacion);
-            await _context.SaveChangesAsync();
+                var notificacionRRHH = new Notificacion
+                {
+                    Mensaje = mensaje,
+                    Tipo = "respuesta",
+                    Estado = "pendiente",
+                    Fecha = DateTime.Now,
+                    PermisoId = incidencia.Id,
+                    UsuarioId = incidenciaDto.UsuarioId,
+                    TipoPermiso = "incidencia"
+                };
+
+                _context.Notificaciones.Add(notificacionRRHH);
+                await _context.SaveChangesAsync();
+            }
         }
+
+
+        // Verifica si Dirección acaba de responder
+        if (incidenciaDto.EstatusDir == 1 || incidenciaDto.EstatusDir == 2)
+        {
+            var yaExisteDir = await _context.Notificaciones.AnyAsync(n =>
+                n.PermisoId == incidencia.Id &&
+                n.Tipo == "respuesta" &&
+                n.TipoPermiso == "incidencia" &&
+                n.Mensaje.Contains("Dirección"));
+
+            if (!yaExisteDir)
+            {
+                var mensaje = incidenciaDto.EstatusDir == 1
+                    ? $"La Dirección de carrera aceptó tu solicitud de incidencia : {incidencia.Id}."
+                    : $"La Dirección de carrera rechazó tu solicitud de incidencia : {incidencia.Id}.";
+
+                var notificacionDir = new Notificacion
+                {
+                    Mensaje = mensaje,
+                    Tipo = "respuesta",
+                    Estado = "pendiente",
+                    Fecha = DateTime.Now,
+                    PermisoId = incidencia.Id,
+                    UsuarioId = incidenciaDto.UsuarioId,
+                    TipoPermiso = "incidencia"
+                };
+
+                _context.Notificaciones.Add(notificacionDir);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+
+
 
         return NoContent();
     }

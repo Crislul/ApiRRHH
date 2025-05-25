@@ -18,8 +18,9 @@ namespace APIDemoUser.Controllers
         {
             _context = context;
         }
+
         //todas las notis de solicitudes
-        [HttpGet]
+        [HttpGet("generales")]
         public async Task<ActionResult<IEnumerable<Notificacion>>> GetNotificaciones()
         {
             return await _context.Notificaciones
@@ -29,11 +30,18 @@ namespace APIDemoUser.Controllers
         }
 
 
+        [HttpGet("leidas")]
+        public async Task<ActionResult<IEnumerable<Notificacion>>> GetNotificacionesLeidas()
+        {
+            return await _context.Notificaciones
+            .Where(n => n.Tipo != "leida")
+            .OrderByDescending(n => n.Fecha)
+            .ToListAsync();
+        }
 
 
-
-
-        [HttpPut("notificaciones/{id}/leida")]
+        //marcar como leida 
+        [HttpPut("{id}/leida")]
         public async Task<IActionResult> MarcarComoLeida(int id)
         {
 
@@ -41,10 +49,27 @@ namespace APIDemoUser.Controllers
             if (notificacion == null)
                 return NotFound();
 
-            notificacion.Estado = "leido";
+            notificacion.Estado = "leida";
             await _context.SaveChangesAsync();
             return NoContent();
         }
+        //notificaciones nuevas solicitudes
+        [HttpGet("rol/{rol}")]
+        public async Task<ActionResult<IEnumerable<Notificacion>>> GetNotificacionesPorRol(int rol)
+        {
+            var notis = await _context.Notificaciones
+                .Where(n =>
+                    (n.Tipo == "incidencia" || n.Tipo == "salida") &&
+                    n.Estado == "pendiente" &&
+                    n.Rol == rol
+                )
+                .OrderByDescending(n => n.Fecha)
+                .ToListAsync();
+
+            return Ok(notis);
+        }
+
+
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> EliminarNotificacion(int id)
@@ -57,6 +82,7 @@ namespace APIDemoUser.Controllers
             await _context.SaveChangesAsync();
             return NoContent();
         }
+
         //usuario notis respuesta
         [HttpGet("usuario/{usuarioId}")]
         public async Task<ActionResult<IEnumerable<Notificacion>>> GetNotificacionesPorUsuario(int usuarioId)
@@ -80,6 +106,7 @@ namespace APIDemoUser.Controllers
             };
 
             _context.Notificaciones.Add(notificacion);
+
             await _context.SaveChangesAsync();
 
             return Ok();

@@ -12,6 +12,8 @@
         public int? UsuarioId { get; set; } // ID del usuario al que va la notificación
 
         public string? TipoPermiso { get; set; } //incidencia, salida para la redireccion de respuesta
+
+        public int? Rol { get; set; } // noti para rrhh o director
     }
 
 }
