@@ -24,7 +24,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
-        policy => policy.WithOrigins("http://localhost:4200") // Reemplaza con tu frontend
+        policy => policy.WithOrigins("https://apprrhh-utrng.onrender.com") // Reemplaza con tu frontend
                         .AllowCredentials()
                         .AllowAnyHeader()
                         .AllowAnyMethod());
