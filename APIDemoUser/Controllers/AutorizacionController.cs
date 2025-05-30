@@ -227,7 +227,8 @@ public class AutorizacionController : ControllerBase
                     Fecha = DateTime.Now,
                     PermisoId = autorizacion.Id,
                     UsuarioId = autorizacionDto.UsuarioId,
-                    TipoPermiso = "salida"
+                    TipoPermiso = "salida",
+                    Rol = 2
                 };
 
                 _context.Notificaciones.Add(notificacionRRHH);
@@ -259,7 +260,8 @@ public class AutorizacionController : ControllerBase
                     Fecha = DateTime.Now,
                     PermisoId = autorizacion.Id,
                     UsuarioId = autorizacionDto.UsuarioId,
-                    TipoPermiso = "salida"
+                    TipoPermiso = "salida",
+                    Rol = 3
                 };
 
                 _context.Notificaciones.Add(notificacionDir);

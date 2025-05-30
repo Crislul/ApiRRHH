@@ -241,7 +241,9 @@ public class IncidenciaController : ControllerBase
                     Fecha = DateTime.Now,
                     PermisoId = incidencia.Id,
                     UsuarioId = incidenciaDto.UsuarioId,
-                    TipoPermiso = "incidencia"
+                    TipoPermiso = "incidencia",
+                    Rol = 2
+
                 };
 
                 _context.Notificaciones.Add(notificacionRRHH);
@@ -273,7 +275,8 @@ public class IncidenciaController : ControllerBase
                     Fecha = DateTime.Now,
                     PermisoId = incidencia.Id,
                     UsuarioId = incidenciaDto.UsuarioId,
-                    TipoPermiso = "incidencia"
+                    TipoPermiso = "incidencia",
+                    Rol = 3   
                 };
 
                 _context.Notificaciones.Add(notificacionDir);
