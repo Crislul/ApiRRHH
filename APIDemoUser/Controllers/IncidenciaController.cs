@@ -150,6 +150,7 @@ public class IncidenciaController : ControllerBase
             Fecha = DateTime.Now,
             PermisoId = incidencia.Id,
             TipoPermiso = "incidencia",
+            UsuarioId = usuario.Id, 
             Rol = 2
         };
 
@@ -162,6 +163,7 @@ public class IncidenciaController : ControllerBase
             Fecha = DateTime.Now,
             PermisoId = incidencia.Id,
             TipoPermiso = "incidencia",
+            UsuarioId = usuario.Id, 
             Rol = 3
         };
 

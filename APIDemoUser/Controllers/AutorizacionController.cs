@@ -143,6 +143,7 @@ public class AutorizacionController : ControllerBase
             Fecha = DateTime.Now,
             PermisoId = autorizacion.Id,
             TipoPermiso = "salida",
+            UsuarioId = usuario.Id, 
             Rol = 2
         };
 
@@ -155,6 +156,7 @@ public class AutorizacionController : ControllerBase
             Fecha = DateTime.Now,
             PermisoId = autorizacion.Id,
             TipoPermiso = "salida",
+            UsuarioId = usuario.Id, 
             Rol = 3
         };
 
