@@ -44,10 +44,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors("AllowFrontend");
 
 app.UseStaticFiles(); // permite servir archivos desde wwwroot
 
-app.UseCors("AllowFrontend");
 
 app.UseHttpsRedirection();
 
